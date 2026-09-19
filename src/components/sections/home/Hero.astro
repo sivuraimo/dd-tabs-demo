@@ -1,0 +1,183 @@
+---
+type Tab = {
+  text: string
+}
+
+const tabs: Tab[] = [
+  { text: 'Design' },
+  { text: 'Development' },
+  { text: 'Branding' },
+  { text: 'Strategy' },
+  { text: 'UI/UX' },
+  { text: 'Marketing' },
+  { text: 'SEO' },
+  { text: 'Content' },
+  { text: 'Motion' },
+  { text: 'Illustration' },
+  { text: 'Photography' },
+  { text: 'E-commerce' },
+  { text: 'Mobile Apps' },
+  { text: 'Consulting' },
+  { text: 'Support' },
+]
+---
+
+<section class="section">
+  <div class="wrapper">
+    <div class="top container">
+      <h1 class="h-xl">Services</h1>
+    </div>
+    <div class="bottom">
+      <div class="tabs container">
+        {tabs &&
+          tabs.map((tab, i) => (
+            <button class:list={['tab', { 'is-active': i === 0 }]}>
+              <span class="p-s text-medium">{tab.text}</span>
+            </button>
+          ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.section .bottom').forEach((bottom) => {
+    const tabs = bottom.querySelectorAll<HTMLButtonElement>('.tab')
+
+    // Mouse drag-to-scroll. Touch uses native overflow scrolling.
+    let pointerId: number | null = null
+    let startX = 0
+    let startScroll = 0
+    let dragged = false
+
+    bottom.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return
+      pointerId = e.pointerId
+      startX = e.clientX
+      startScroll = bottom.scrollLeft
+      dragged = false
+    })
+
+    bottom.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== pointerId) return
+      const dx = e.clientX - startX
+      if (!dragged && Math.abs(dx) > 5) {
+        dragged = true
+        bottom.setPointerCapture(e.pointerId)
+        bottom.classList.add('is-dragging')
+      }
+      if (dragged) bottom.scrollLeft = startScroll - dx
+    })
+
+    const endDrag = (e: PointerEvent) => {
+      if (e.pointerId !== pointerId) return
+      pointerId = null
+      bottom.classList.remove('is-dragging')
+    }
+    bottom.addEventListener('pointerup', endDrag)
+    bottom.addEventListener('pointercancel', endDrag)
+
+    // Swallow the click that follows a drag so it doesn't select a tab.
+    bottom.addEventListener(
+      'click',
+      (e) => {
+        if (!dragged) return
+        dragged = false
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      true,
+    )
+
+    bottom.addEventListener('dragstart', (e) => e.preventDefault())
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.classList.toggle('is-active', t === tab))
+
+        const bottomRect = bottom.getBoundingClientRect()
+        const tabRect = tab.getBoundingClientRect()
+
+        bottom.scrollTo({
+          left:
+            bottom.scrollLeft +
+            (tabRect.left - bottomRect.left) -
+            (bottomRect.width - tabRect.width) / 2,
+          behavior: 'smooth',
+        })
+      })
+    })
+  })
+</script>
+
+<style lang="scss">
+  .section {
+    wodth: 100%;
+    padding: rem(100) 0;
+  }
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: rem(50);
+  }
+  .top {
+    text-align: center;
+  }
+  .bottom {
+    width: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: auto;
+    cursor: grab;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+
+      .tab {
+        cursor: grabbing;
+      }
+    }
+  }
+  .tabs {
+    display: flex;
+  }
+  .tabs::after {
+    flex: 0 0 auto;
+    content: '';
+    width: calc(calc(calc(100vw - var(--container))) / 2);
+  }
+  .tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: rem(8) rem(20);
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+    background-color: #f5f5f5;
+    border-radius: rem(5);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .tab.is-active {
+    background-color: #111;
+    color: #fff;
+  }
+  .tab:not(:last-child) {
+    margin-right: rem(40);
+  }
+  .tab::before {
+    content: '';
+    width: rem(16);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    border: rem(1) dashed currentColor;
+  }
+</style>

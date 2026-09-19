@@ -5,7 +5,7 @@
   --white: #ffffff;
   --black: #000000;
   /* layout */
-  --container: #{rem(1320)};
+  --container: #{rem(1300)};
 }
 
 /* Base styles */
@@ -38,6 +38,9 @@ body {
 
 /* H1 */
 .h-xl {
+  font-size: em(56);
+  line-height: 1.25;
+  font-weight: 600;
 }
 /* h2 */
 .h-l {
@@ -53,9 +56,14 @@ body {
 
 /* p small */
 .p-s {
+  font-size: em(16);
+  line-height: 1.4;
 }
 /* p normal */
 .p-m {
+}
+.text-medium {
+  font-weight: 500;
 }
 /* Colors utils */
 .text-accent {
