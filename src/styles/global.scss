@@ -1,0 +1,85 @@
+:root {
+  /* fonts */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* colors */
+  --white: #ffffff;
+  --black: #000000;
+  /* layout */
+  --container: #{rem(1320)};
+}
+
+/* Base styles */
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--black);
+  background-color: var(--white);
+}
+
+/* Adaptive */
+html,
+body {
+  font-size: calc(16vw / 14.4);
+
+  @include mobile {
+    font-size: calc(16vw / 3.75);
+  }
+}
+
+/* Typography */
+
+/* Headings */
+
+/* H1 */
+.h-xl {
+}
+/* h2 */
+.h-l {
+}
+/* h3 */
+.h-m {
+}
+/* h4 */
+.h-s {
+}
+
+/* Paragraphs */
+
+/* p small */
+.p-s {
+}
+/* p normal */
+.p-m {
+}
+/* Colors utils */
+.text-accent {
+}
+
+/* Layout */
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--container);
+  @include mobile {
+    max-width: none;
+    padding: 0 rem(20);
+  }
+}
+
+/* Image utils */
+.image-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.image-contain {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

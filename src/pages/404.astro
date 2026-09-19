@@ -1,0 +1,23 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Page not found">
+  <main class="not-found">
+    <div class="container">
+      <h1 class="h-l">Page not found</h1>
+      <a class="p-m text-link" href="/">
+        Back to home
+      </a>
+    </div>
+  </main>
+</Layout>
+
+<style lang="scss">
+  .not-found {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+</style>
