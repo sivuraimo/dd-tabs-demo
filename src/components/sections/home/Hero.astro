@@ -41,73 +41,75 @@ const tabs: Tab[] = [
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.section .bottom').forEach((bottom) => {
-    const tabs = bottom.querySelectorAll<HTMLButtonElement>('.tab')
+  document
+    .querySelectorAll<HTMLElement>('.section .bottom')
+    .forEach((bottom) => {
+      const tabs = bottom.querySelectorAll<HTMLButtonElement>('.tab')
 
-    // Mouse drag-to-scroll. Touch uses native overflow scrolling.
-    let pointerId: number | null = null
-    let startX = 0
-    let startScroll = 0
-    let dragged = false
+      // Mouse drag-to-scroll. Touch uses native overflow scrolling.
+      let pointerId: number | null = null
+      let startX = 0
+      let startScroll = 0
+      let dragged = false
 
-    bottom.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || e.button !== 0) return
-      pointerId = e.pointerId
-      startX = e.clientX
-      startScroll = bottom.scrollLeft
-      dragged = false
-    })
-
-    bottom.addEventListener('pointermove', (e) => {
-      if (e.pointerId !== pointerId) return
-      const dx = e.clientX - startX
-      if (!dragged && Math.abs(dx) > 5) {
-        dragged = true
-        bottom.setPointerCapture(e.pointerId)
-        bottom.classList.add('is-dragging')
-      }
-      if (dragged) bottom.scrollLeft = startScroll - dx
-    })
-
-    const endDrag = (e: PointerEvent) => {
-      if (e.pointerId !== pointerId) return
-      pointerId = null
-      bottom.classList.remove('is-dragging')
-    }
-    bottom.addEventListener('pointerup', endDrag)
-    bottom.addEventListener('pointercancel', endDrag)
-
-    // Swallow the click that follows a drag so it doesn't select a tab.
-    bottom.addEventListener(
-      'click',
-      (e) => {
-        if (!dragged) return
+      bottom.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return
+        pointerId = e.pointerId
+        startX = e.clientX
+        startScroll = bottom.scrollLeft
         dragged = false
-        e.preventDefault()
-        e.stopPropagation()
-      },
-      true,
-    )
+      })
 
-    bottom.addEventListener('dragstart', (e) => e.preventDefault())
+      bottom.addEventListener('pointermove', (e) => {
+        if (e.pointerId !== pointerId) return
+        const dx = e.clientX - startX
+        if (!dragged && Math.abs(dx) > 5) {
+          dragged = true
+          bottom.setPointerCapture(e.pointerId)
+          bottom.classList.add('is-dragging')
+        }
+        if (dragged) bottom.scrollLeft = startScroll - dx
+      })
 
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        tabs.forEach((t) => t.classList.toggle('is-active', t === tab))
+      const endDrag = (e: PointerEvent) => {
+        if (e.pointerId !== pointerId) return
+        pointerId = null
+        bottom.classList.remove('is-dragging')
+      }
+      bottom.addEventListener('pointerup', endDrag)
+      bottom.addEventListener('pointercancel', endDrag)
 
-        const bottomRect = bottom.getBoundingClientRect()
-        const tabRect = tab.getBoundingClientRect()
+      // Swallow the click that follows a drag so it doesn't select a tab.
+      bottom.addEventListener(
+        'click',
+        (e) => {
+          if (!dragged) return
+          dragged = false
+          e.preventDefault()
+          e.stopPropagation()
+        },
+        true,
+      )
 
-        bottom.scrollTo({
-          left:
-            bottom.scrollLeft +
-            (tabRect.left - bottomRect.left) -
-            (bottomRect.width - tabRect.width) / 2,
-          behavior: 'smooth',
+      bottom.addEventListener('dragstart', (e) => e.preventDefault())
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((t) => t.classList.toggle('is-active', t === tab))
+
+          const bottomRect = bottom.getBoundingClientRect()
+          const tabRect = tab.getBoundingClientRect()
+
+          bottom.scrollTo({
+            left:
+              bottom.scrollLeft +
+              (tabRect.left - bottomRect.left) -
+              (bottomRect.width - tabRect.width) / 2,
+            behavior: 'smooth',
+          })
         })
       })
     })
-  })
 </script>
 
 <style lang="scss">
